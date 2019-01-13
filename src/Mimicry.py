@@ -39,7 +39,5 @@ async def write_message(message):
         file.write(message.content + '\n')
 
 
-
-
 client.run(credentials["token"])
 
