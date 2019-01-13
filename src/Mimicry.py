@@ -1,5 +1,5 @@
 import discord
-import json;
+import json
 
 with open("credentials.json") as credentialsFile:
     credentials = json.load(credentialsFile)
