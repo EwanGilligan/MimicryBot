@@ -1,5 +1,6 @@
 import discord
 import json
+import generator
 
 with open("credentials.json") as credentialsFile:
     credentials = json.load(credentialsFile)
@@ -21,6 +22,8 @@ async def on_message(message):
     if message.content.startswith("!mimicry_setup"):
         await client.send_message(message.channel, "Setting up")
         await read_message_history(message.server)
+    if message.content.startswith("!mimic"):
+        await generate_sentences("104313625824481280")
 
 
 async def read_message_history(server):
@@ -35,9 +38,14 @@ async def read_message_history(server):
 
 
 async def write_message(message):
-    filePath = credentials["data_path"] + '/' + message.author.id
+    filePath = credentials["data_path"] + '/' + message.author.id + ".txt"
     with open(filePath, 'a+') as file:
         file.write(message.content + '\n')
+
+async def generate_sentences(ID):
+    filePath = credentials["data_path"] + '/' + ID
+    generator.build_model(filePath)
+
 
 
 client.run(credentials["token"])
