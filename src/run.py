@@ -1,6 +1,6 @@
 import mimicry
 
-def run:
+def run():
     mimicry.run()
 
 run()

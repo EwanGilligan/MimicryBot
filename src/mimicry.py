@@ -41,11 +41,13 @@ async def write_message(message):
         file.write(message.content + '\n')
 
 
-async def generate_sentence(ID):
-    # Filepath for the generated sentence.
-    filePath = credentials["data_path"] + '/' + ID + ".txt"
-    # Generates the model.
-    model = generator.build_model(filePath)
+async def generate_sentence(*ids):
+    filePaths = []
+    for id in ids:
+        # Filepath for the generated sentence.
+        filePaths.append(credentials["data_path"] + '/' + id + ".txt")
+
+    model = generator.buildModel(filePaths)
     sentence = model.make_sentence()
     if sentence is None:
         return model.make_sentence(tries=100)
@@ -55,7 +57,17 @@ async def generate_sentence(ID):
 
 async def mimic(message):
     # Checks first that the message is of the correct format.
-    if re.search("!mimic [0-9]{18}", message.content):
+    if re.search("^!mimic [0-9]{18}$", message.content):
+        # Generates the sentence with the chosen id.
+        ID = str(re.search("[0-9]{18}", message.content).group())
+        sentence = await generate_sentence(ID)
+        await client.send_message(message.channel, sentence)
+    else:
+        await client.send_message(message.channel, "Invalid syntax")
+
+async def mimic_fusion(message):
+    # Checks first that the message is of the correct format.
+    if re.search("^!mimic (([0-9]{18})|([0-9]{18} )+([0-9]{18}))$", message.content):
         # Generates the sentence with the chosen id.
         ID = str(re.search("[0-9]{18}", message.content).group())
         sentence = await generate_sentence(ID)
