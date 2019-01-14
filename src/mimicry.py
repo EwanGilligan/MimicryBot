@@ -36,8 +36,10 @@ async def read_message_history(server):
 
 
 async def write_message(message):
+    # Filepath is created from the author of the message.
     filePath = credentials["data_path"] + '/' + message.author.id + ".txt"
     with open(filePath, 'a+') as file:
+        # Writes the message content to the file.
         file.write(message.content + '\n')
 
 
@@ -46,11 +48,21 @@ async def generate_sentence(ids):
     for id in ids:
         # Filepath for the generated sentence.
         filePaths.append(credentials["data_path"] + '/' + id + ".txt")
+    # Builds the model
     model = generator.build_model(filePaths)
-    sentence = model.make_sentence()
+    # Creates a sentence
+    sentence = model.make_sentence
+    # Alternative for if the sentence creation fails.
     if sentence is None:
-        return model.make_sentence(tries=100)
-    else:
+        current_tries = 100
+        limit = credentials["maximum_attempts"]
+        while sentence is None and current_tries < limit:
+            sentence = model.make_sentence(tries=current_tries)
+            current_tries *= 10
+        # Behaviour for if it still fails.
+        if sentence is None:
+            return "Unable to generate sentence"
+    else
         return sentence
 
 
