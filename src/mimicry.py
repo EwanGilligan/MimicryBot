@@ -18,8 +18,6 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.content == "Hello":
-        await client.send_message(message.channel, "Squawk")
     if message.content.startswith("!mimicry_setup"):
         await client.send_message(message.channel, "Setting up")
         await read_message_history(message.server)
@@ -66,4 +64,5 @@ async def mimic(message):
         await client.send_message(message.channel, "Invalid syntax")
 
 
-client.run(credentials["token"])
+def run():
+    client.run(credentials["token"])
