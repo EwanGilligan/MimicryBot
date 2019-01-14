@@ -1,6 +1,6 @@
 import markovify
 
-def build_model(*filePaths):
+def build_model(filePaths):
     models = []
     for filePath in filePaths:
         with open(filePath) as file:
