@@ -45,16 +45,23 @@ async def write_message(message):
         file.write(message.content + '\n')
 
 async def generate_sentence(ID):
+    #Filepath for the generated sentence.
     filePath = credentials["data_path"] + '/' + ID + ".txt"
+    #Generates the model.
     model = generator.build_model(filePath)
-    return model.make_sentence()
+    sentence = model.make_sentence()
+    if sentence == None :
+        return model.make_sentence(tries=100)
+    else:
+        return sentence
 
 
 async def mimic(message):
     #Checks first that the message is of the correct format.
     if re.search("!mimic [0-9]{18}", message.content):
         #Generates the sentence with the chosen id.
-        sentence  = await generate_sentence(str(re.search("[0-9]{18}", message.content).group()))
+        ID = str(re.search("[0-9]{18}", message.content).group())
+        sentence  = await generate_sentence(ID)
         await client.send_message(message.channel, sentence)
     else:
         await client.send_message(message.channel, "Invalid syntax")
