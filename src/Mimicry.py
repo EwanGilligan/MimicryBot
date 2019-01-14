@@ -27,13 +27,11 @@ async def on_message(message):
         await mimic(message)
 
 
-
-
 async def read_message_history(server):
     # Gets all channels the client has access to
     for channel in server.channels:
         # Gets all the messages from each client.
-        async for message in client.logs_from(channel, limit=10000):
+        async for message in client.logs_from(channel, limit=credentials["message_limit"]):
             # Writes the messages to the file listed by the users name
             if message.author != client.user:
                 await write_message(message)
@@ -44,29 +42,28 @@ async def write_message(message):
     with open(filePath, 'a+') as file:
         file.write(message.content + '\n')
 
+
 async def generate_sentence(ID):
-    #Filepath for the generated sentence.
+    # Filepath for the generated sentence.
     filePath = credentials["data_path"] + '/' + ID + ".txt"
-    #Generates the model.
+    # Generates the model.
     model = generator.build_model(filePath)
     sentence = model.make_sentence()
-    if sentence == None :
+    if sentence is None:
         return model.make_sentence(tries=100)
     else:
         return sentence
 
 
 async def mimic(message):
-    #Checks first that the message is of the correct format.
+    # Checks first that the message is of the correct format.
     if re.search("!mimic [0-9]{18}", message.content):
-        #Generates the sentence with the chosen id.
+        # Generates the sentence with the chosen id.
         ID = str(re.search("[0-9]{18}", message.content).group())
-        sentence  = await generate_sentence(ID)
+        sentence = await generate_sentence(ID)
         await client.send_message(message.channel, sentence)
     else:
         await client.send_message(message.channel, "Invalid syntax")
-
-
 
 
 client.run(credentials["token"])
