@@ -5,5 +5,4 @@ def build_model(filePath):
         text = file.read()
 
     text_model = markovify.NewlineText(text)
-    for i in range(5):
-        print(text_model.make_sentence())
+    return text_model
