@@ -51,7 +51,7 @@ async def generate_sentence(ids):
     # Builds the model
     model = generator.build_model(filePaths)
     # Creates a sentence
-    sentence = model.make_sentence
+    sentence = model.make_sentence()
     # Alternative for if the sentence creation fails.
     if sentence is None:
         current_tries = 100
@@ -61,7 +61,7 @@ async def generate_sentence(ids):
             current_tries *= 10
         # Behaviour for if it still fails.
         if sentence is None:
-            return "Unable to generate sentence"
+            return "Unable to generate sentence."
     else:
         return sentence
 
@@ -75,7 +75,7 @@ async def mimic(message):
         sentence = await generate_sentence(ID)
         await client.send_message(message.channel, sentence)
     else:
-        await client.send_message(message.channel, "Invalid syntax")
+        await client.send_message(message.channel, "Invalid syntax.")
 
 
 async def mimic_fusion(message):
@@ -88,7 +88,7 @@ async def mimic_fusion(message):
         # Sends the sentence.
         await client.send_message(message.channel, sentence)
     else:
-        await client.send_message(message.channel, "Invalid syntax")
+        await client.send_message(message.channel, "Invalid syntax.")
 
 
 def run():
