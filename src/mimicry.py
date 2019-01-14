@@ -62,7 +62,7 @@ async def generate_sentence(ids):
         # Behaviour for if it still fails.
         if sentence is None:
             return "Unable to generate sentence"
-    else
+    else:
         return sentence
 
 
